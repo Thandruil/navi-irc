@@ -14,7 +14,6 @@ class Navi(IRCBot.IRCBot):
 
     def __init__(self):
         super(Navi, self).__init__(self.nickname, self.server)
-        self.start()
 
 
 if __name__ == '__main__':
