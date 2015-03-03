@@ -2,7 +2,6 @@ import IRCBot
 
 
 class Navi(IRCBot.IRCBot):
-
     nickname = "Navi"
     server = "irc.heylisten.net"
 
@@ -11,6 +10,9 @@ class Navi(IRCBot.IRCBot):
             self.join_channel('#programming')
         if channel == "Navi":
             self.send_message('#programming', sender + ' said \"' + message + '\"')
+
+    def on_client_join(self, client, channel):
+        self.send_message(channel, "Welcome " + client + " to " + channel + "!")
 
     def __init__(self):
         super(Navi, self).__init__(self.nickname, self.server)

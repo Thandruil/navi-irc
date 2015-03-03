@@ -15,28 +15,59 @@ class IRCBot():
 
     def connect(self):
         self.socket.connect((self.server, self.port))
-        self.send("NICK " + self.nickname)
-        self.send("USER " + self.nickname + " " + self.nickname + " " + self.nickname + " :Python Bot")
+        self.send_packet("NICK " + self.nickname)
+        self.send_packet("USER " + self.nickname + " " + self.nickname + " " + self.nickname + " :Python Bot")
 
-    def send(self, message):
+    def send_packet(self, message):
         self.socket.send((message + "\r\n").encode())
 
     def join_channel(self, channel):
-        self.send("JOIN " + channel)
+        self.send_packet("JOIN " + channel)
+        self.on_join(channel)
 
     def leave_channel(self, channel):
-        self.send("PART " + channel)
+        self.send_packet("PART " + channel)
 
     def send_message(self, channel, message):
-        self.send("PRIVMSG " + channel + " " + message)
+        self.send_packet("PRIVMSG " + channel + " " + message)
 
     def pong(self, message=""):
-        self.send("PONG " + message)
+        self.send_packet("PONG " + message)
 
     def quit(self):
-        self.send("QUIT")
+        self.send_packet("QUIT")
 
     def on_message(self, sender, channel, message):
+        """Event raised when a message is received
+
+        :param sender:
+        :param channel:
+        :param message:
+        """
+        pass
+
+    def on_join(self, channel):
+        """Event raised when joining a channel
+
+        :param channel:
+        """
+        pass
+
+    def on_client_join(self, client, channel):
+        """Event raised when a client joins a channel
+
+        :param client:
+        :param channel:
+        """
+        pass
+
+    def on_client_leave(self, client, channel):
+        """Event raised when a client leaves a channel
+
+        :param client:
+        :param channel:
+        :return:
+        """
         pass
 
     def start(self):
@@ -60,3 +91,9 @@ class IRCBot():
                 channel, message = groups['args'].split(' ', 1)
                 message = message[1:]
                 self.on_message(sender, channel, message)
+            if groups['command'] == "JOIN":
+                channel = groups['args'][1:]
+                self.on_client_join(sender, channel)
+            if groups['command'] == "PART":
+                channel = groups['args'][1:]
+                self.on_client_leave(sender, channel)
