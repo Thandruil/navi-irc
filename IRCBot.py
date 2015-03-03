@@ -80,7 +80,8 @@ class IRCBot():
                     print(line)
                     if line.startswith("PING"):
                         self.pong(line.split()[1][1:])
-                    self.parse_packet(line)
+                    else:
+                        self.parse_packet(line)
 
     def parse_packet(self, message):
         match = self.pattern.match(message)
