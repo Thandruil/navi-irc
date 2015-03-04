@@ -46,6 +46,14 @@ class IRCBot():
         """
         pass
 
+    def on_notice(self, sender, message):
+        """Event raised when a notice is received
+
+        :param sender:
+        :param message:
+        """
+        pass
+
     def on_join(self, channel):
         """Event raised when joining a channel
 
@@ -92,6 +100,9 @@ class IRCBot():
                 channel, message = groups['args'].split(' ', 1)
                 message = message[1:]
                 self.on_message(sender, channel, message)
+            if groups['command'] == "NOTICE":
+                message = groups['args'][1:]
+                self.on_notice(sender, message)
             if groups['command'] == "JOIN":
                 channel = groups['args'][1:]
                 self.on_client_join(sender, channel)
