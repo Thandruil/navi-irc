@@ -1,0 +1,7 @@
+import os
+
+# Location of the database
+DATABASE = os.path.join(os.path.dirname(__file__), 'db.sqlite3')
+
+# Used to identify with NickServ
+NICKSERV_PASS = ''
