@@ -3,7 +3,7 @@ import re
 
 
 class IRCBot():
-    pattern = re.compile(r'^:(?P<sender>\w+)!(?P<host>\S+)\s(?P<command>\w+)(?:\s(?P<args>.+))?$')
+    pattern = re.compile(r'^:(?P<sender>\S+)!(?P<host>\S+)\s(?P<command>\w+)(?:\s(?P<args>.+))?$')
 
     def __init__(self, nickname, server, port=6667):
         self.server = server
