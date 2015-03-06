@@ -1,11 +1,10 @@
 import IRCBot
-import sqlite3
 
 
 class Navi(IRCBot.IRCBot):
     nickname = 'Navi'
+    realname = 'Navi IRC Bot'
     server = 'irc.heylisten.net'
-    database = 'navi.db'  # Used as a future database
 
     def on_message(self, sender, channel, message, **kwargs):
         if sender == 'Thandruil':
@@ -16,7 +15,7 @@ class Navi(IRCBot.IRCBot):
             self.send_message(channel, "Welcome, " + client + " to " + channel + "!")
 
     def __init__(self):
-        super(Navi, self).__init__(self.nickname, self.server)
+        super(Navi, self).__init__(self.nickname, self.realname, self.server)
 
 
 if __name__ == '__main__':

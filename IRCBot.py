@@ -5,18 +5,19 @@ import re
 class IRCBot():
     pattern = re.compile(r'^:(?P<sender>\S+)!(?P<host>\S+)\s(?P<command>\w+)(?:\s(?P<args>.+))?$')
 
-    def __init__(self, nickname, server, port=6667):
+    def __init__(self, nickname, realname, server, port=6667):
         self.server = server
         self.running = True
         self.port = port
         self.nickname = nickname
+        self.realname = realname
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect()
 
     def connect(self):
         self.socket.connect((self.server, self.port))
         self.send_packet("NICK " + self.nickname)
-        self.send_packet("USER " + self.nickname + " " + self.nickname + " " + self.nickname + " :Python Bot")
+        self.send_packet("USER " + self.nickname + " " + self.nickname + " " + self.nickname + " :" + self.realname)
 
     def send_packet(self, message):
         self.socket.send((message + "\r\n").encode())
