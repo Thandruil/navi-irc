@@ -1,9 +1,17 @@
 import socket
 import re
 
+# IRC PROTOCOL
+WELCOME = "001"
+PRIVMSG = "PRIVMSG"
+NOTICE = "NOTICE"
+CHANNEL_JOIN = "JOIN"
+CHANNEL_LEAVE = "PART"
+
 
 class IRCBot():
-    pattern = re.compile(r'^:(?P<sender>\S+)!(?P<host>\S+)\s(?P<command>\w+)(?:\s(?P<args>.+))?$')
+    packetpattern = re.compile(r'^(:(?P<prefix>\S+) )?(?P<command>\S+)( (?!:)(?P<params>.+?))?( :(?P<trail>.+))?$')
+    userpattern = re.compile(r'^(?P<nick>\S+)!(?P<ident>\S+)@(?P<host>\S+)$')
 
     def __init__(self, nickname, realname, server, port=6667):
         self.server = server
@@ -93,20 +101,31 @@ class IRCBot():
                         self.parse_packet(line)
 
     def parse_packet(self, message):
-        match = self.pattern.match(message)
-        if match is not None:
-            groups = match.groupdict()
-            sender = groups['sender']
-            if groups['command'] == "PRIVMSG":
-                channel, message = groups['args'].split(' ', 1)
-                message = message[1:]
+        packetmatch = self.packetpattern.match(message)
+        if packetmatch is not None:
+            groups = packetmatch.groupdict()
+            prefix = groups['prefix']
+            command = groups['command']
+
+            usermatch = self.userpattern.match(prefix)
+            if usermatch is not None:
+                sender = usermatch.groupdict()['nick']
+            else:
+                sender = prefix
+
+            if command == WELCOME:
+                pass
+            elif command == PRIVMSG:
+                channel = groups['params']
+                message = groups['trail']
                 self.on_message(sender, channel, message)
-            if groups['command'] == "NOTICE":
-                message = groups['args'][1:]
+            elif command == NOTICE:
+                message = groups['trail']
                 self.on_notice(sender, message)
-            if groups['command'] == "JOIN":
+            elif command == CHANNEL_JOIN:
                 channel = groups['args'][1:]
                 self.on_client_join(sender, channel)
-            if groups['command'] == "PART":
+            elif command == CHANNEL_LEAVE:
                 channel = groups['args'][1:]
                 self.on_client_leave(sender, channel)
+            # TODO: handling unknown packets
