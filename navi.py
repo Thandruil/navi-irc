@@ -1,7 +1,7 @@
-import IRCBot
+import ircbot
 
 
-class Navi(IRCBot.IRCBot):
+class Navi(ircbot.IRCBot):
     nickname = 'Navi'
     realname = 'Navi IRC Bot'
     server = 'irc.heylisten.net'
