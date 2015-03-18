@@ -10,8 +10,19 @@ CHANNEL_LEAVE = "PART"
 
 
 class NaviBot():
-    packetpattern = re.compile(r'^(:(?P<prefix>\S+) )?(?P<command>\S+)( (?!:)(?P<params>.+?))?( :(?P<trail>.+))?$')
-    userpattern = re.compile(r'^(?P<nick>\S+)!(?P<ident>\S+)@(?P<host>\S+)$')
+    packetpattern = re.compile(
+        (r'^'
+         '(:(?P<prefix>\S+) )?'
+         '(?P<command>\S+)'
+         '( (?!:)(?P<params>.+?))?'
+         '( :(?P<trail>.+))?'
+         '$'))
+    userpattern = re.compile(  # nick!ident@host
+        (r'^'
+         '(?P<nick>\S+)!'
+         '(?P<ident>\S+)@'
+         '(?P<host>\S+)'
+         '$'))
 
     def __init__(self, nickname, realname, server, port=6667):
         self.server = server
@@ -24,24 +35,25 @@ class NaviBot():
 
     def connect(self):
         self.socket.connect((self.server, self.port))
-        self.send_packet("NICK " + self.nickname)
-        self.send_packet("USER " + self.nickname + " " + self.nickname + " " + self.nickname + " :" + self.realname)
+        self.send_packet("NICK {0}".format(self.nickname))
+        self.send_packet("USER {0} {0} {0} :{1}".format(self.nickname,
+                                                        self.realname))
 
     def send_packet(self, message):
         self.socket.send((message + "\r\n").encode())
 
     def join_channel(self, channel):
-        self.send_packet("JOIN " + channel)
+        self.send_packet("JOIN {0}".format(channel))
         self.on_join(channel)
 
     def leave_channel(self, channel):
-        self.send_packet("PART " + channel)
+        self.send_packet("PART {0}".format(channel))
 
     def send_message(self, channel, message):
-        self.send_packet("PRIVMSG " + channel + " " + message)
+        self.send_packet("PRIVMSG {0} {1}".format(channel, message))
 
     def pong(self, message=""):
-        self.send_packet("PONG " + message)
+        self.send_packet("PONG {0}".format(message))
 
     def quit(self):
         self.send_packet("QUIT")

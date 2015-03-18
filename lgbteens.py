@@ -12,7 +12,9 @@ class Navi(navi.NaviBot):
 
     def on_client_join(self, client, channel):
         if client != 'Navi':
-            self.send_message(channel, "Welcome, " + client + " to " + channel + "!")
+            self.send_message(
+                channel, "Welcome, {0} to {1}!".format(client, channel)
+            )
 
     def __init__(self):
         super(Navi, self).__init__(self.nickname, self.realname, self.server)
