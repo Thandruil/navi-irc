@@ -2,6 +2,12 @@
 __pycache__/
 *.pyc
 
+### ZODB
+*.fs
+*.fs.lock
+*.fs.index
+*.fs.tmp
+
 ### Application settings
 local.py
 *.sqlite3
