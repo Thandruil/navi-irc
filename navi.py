@@ -118,6 +118,8 @@ class NaviBot():
             groups = packetmatch.groupdict()
             prefix = groups['prefix']
             command = groups['command']
+            if prefix is None:
+                return
 
             usermatch = self.userpattern.match(prefix)
             if usermatch is not None:
@@ -135,9 +137,9 @@ class NaviBot():
                 message = groups['trail']
                 self.on_notice(sender, message)
             elif command == CHANNEL_JOIN:
-                channel = groups['args'][1:]
+                channel = groups['trail'][1:]
                 self.on_client_join(sender, channel)
             elif command == CHANNEL_LEAVE:
-                channel = groups['args'][1:]
+                channel = groups['trail'][1:]
                 self.on_client_leave(sender, channel)
             # TODO: handling unknown packets
