@@ -10,8 +10,7 @@ class Navi(navi.NaviBot):
     db_file = 'lgbteensbot.fs'
 
     def on_message(self, sender, channel, message, **kwargs):
-        if sender == 'TotempaaltJ':
-            self.send_packet(message)  # For debugging purposes
+        if message[:4] == 'init':
             self.join_channel('#programming')
         if message[:5] == '!info':
             self.info(sender, channel, message)
